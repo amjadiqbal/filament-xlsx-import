@@ -235,10 +235,12 @@ it('uses the configured date formats', function (): void {
 });
 
 it('refuses old .xls workbooks with a clear message', function (): void {
-    livewire(ListProducts::class)
+    $component = livewire(ListProducts::class)
         ->mountAction('import')
-        ->setActionData(['file' => UploadedFile::fake()->createWithContent('legacy.xls', "\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1".str_repeat("\0", 512))])
+        ->setActionData(['file' => UploadedFile::fake()->createWithContent('legacy.xls', (string) file_get_contents(__DIR__.'/../files/legacy.xls'))])
         ->assertHasActionErrors(['file']);
+
+    expect($component->errors()->first('mountedActions.0.data.file'))->toBe(__('filament-xlsx-import::xlsx-import.file.xls'));
 
     expect(Import::query()->count())->toBe(0);
 });

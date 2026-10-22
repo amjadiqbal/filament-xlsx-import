@@ -52,6 +52,12 @@ class XlsxImportAction extends ImportAction
     /** Some systems report a workbook as a plain zip archive; the extension check below still applies. */
     public const ZIP_MIME_TYPES = ['application/zip', 'application/x-zip-compressed', 'application/octet-stream'];
 
+    /**
+     * Old binary .xls workbooks, let past the mime check only so the extension rule can say how to convert them
+     * instead of failing with a list of mime types.
+     */
+    public const XLS_MIME_TYPES = ['application/CDFV2', 'application/x-ole-storage', 'application/vnd.ms-office'];
+
     protected bool|Closure $acceptsCsv = true;
 
     protected bool|Closure $acceptsOds = true;
@@ -389,6 +395,7 @@ class XlsxImportAction extends ImportAction
             ...self::XLSX_MIME_TYPES,
             ...($this->acceptsOds() ? self::ODS_MIME_TYPES : []),
             ...self::ZIP_MIME_TYPES,
+            ...self::XLS_MIME_TYPES,
             ...($this->acceptsCsv() ? self::CSV_MIME_TYPES : []),
         ]));
     }
