@@ -22,8 +22,9 @@ installs.
 ## What it does
 
 - Accepts `.xlsx`, `.ods` and `.csv` in the same upload field. CSV files go through core's own reader, unchanged.
-- Shows a **Sheet** select when a workbook has more than one visible sheet. It starts on the sheet the workbook opens
-  on, and re-guesses the column mapping when you pick another one. Hidden sheets are not offered.
+- Shows a **Sheet** select when a workbook has more than one visible sheet. It starts on the sheet whose headings
+  match your Importer's columns best, so a cover or notes sheet is passed over (on a tie, the sheet the workbook opens
+  on). Picking another sheet re-guesses the column mapping. Hidden sheets are not offered.
 - Guesses the column mapping from the header row the same way core does (`ImportColumn::guess()` works as before).
 - Hands each row to your `Importer` as strings, the way the same column would arrive from a CSV file:
   - dates as `Y-m-d`, date-times as `Y-m-d H:i:s`, times as `H:i:s` (all configurable);
@@ -81,7 +82,7 @@ XlsxImportAction::make()
     // Always read this sheet (by name, or index from 0) and hide the sheet picker.
     ->sheet('Products')
 
-    // Or keep reading the default sheet but never show the picker.
+    // Or never show the picker: the best-matching sheet is read.
     ->sheetPicker(false)
 
     // The row that holds the headings, counted from 0 the way the spreadsheet numbers rows (core's own option).

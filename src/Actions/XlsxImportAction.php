@@ -465,8 +465,9 @@ class XlsxImportAction extends ImportAction
     }
 
     /**
-     * The sheet to read when none was picked: the configured one, else the one the workbook opens on.
-     * Null for a CSV file.
+     * The sheet to read when none was picked: the configured one; else the visible sheet whose headings match the
+     * most Importer columns (so a cover or notes sheet is passed over), preferring the sheet the workbook opens on
+     * when there is a tie. Null for a CSV file.
      */
     public function getDefaultSheetFor(TemporaryUploadedFile $file): ?int
     {
@@ -483,7 +484,30 @@ class XlsxImportAction extends ImportAction
                 : 'The workbook has no visible sheet.');
         }
 
-        return $sheet;
+        if ($this->getSheet() !== null) {
+            return $sheet;
+        }
+
+        $candidates = array_unique([$sheet, ...array_keys($spreadsheet->sheets())]);
+
+        if (count($candidates) < 2) {
+            return $sheet;
+        }
+
+        $best = $sheet;
+        $bestScore = 0;
+
+        foreach ($candidates as $candidate) {
+            $headings = array_values($spreadsheet->header($candidate, $this->getHeaderOffset() ?? 0));
+            $score = count(array_filter($this->guessColumnMap($headings)));
+
+            if ($score > $bestScore) {
+                $best = $candidate;
+                $bestScore = $score;
+            }
+        }
+
+        return $best;
     }
 
     public function normalizeSheet(mixed $sheet): ?int

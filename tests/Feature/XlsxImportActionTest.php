@@ -96,7 +96,7 @@ it('still imports .csv files the way core does', function (): void {
     expect(Product::query()->pluck('price', 'name')->all())->toBe(['Lamp' => '9.5', 'Desk' => '120']);
 });
 
-it('offers a sheet picker for workbooks with several visible sheets and re-guesses columns on change', function (): void {
+it('offers a sheet picker, starts on the sheet that matches the Importer and re-guesses columns on change', function (): void {
     $file = Workbook::upload('catalog.xlsx', [
         'Notes' => [['Read me'], ['Prices in USD']],
         'Hidden' => [['Name'], ['Secret']],
@@ -106,9 +106,11 @@ it('offers a sheet picker for workbooks with several visible sheets and re-guess
     $component = livewire(ListProducts::class)
         ->mountAction('import')
         ->setActionData(['file' => $file])
-        ->assertActionDataSet(['sheet' => 0, 'columnMap.name' => null]);
+        ->assertActionDataSet(['sheet' => 2, 'columnMap.sku' => 'Code']);
 
     $component
+        ->setActionData(['sheet' => 0])
+        ->assertActionDataSet(['columnMap.sku' => null])
         ->setActionData(['sheet' => 2])
         ->assertActionDataSet(['columnMap.sku' => 'Code'])
         ->setActionData(['columnMap' => ['name' => 'Product name', 'sku' => 'Code']])
@@ -116,6 +118,13 @@ it('offers a sheet picker for workbooks with several visible sheets and re-guess
         ->assertHasNoActionErrors();
 
     expect(Product::query()->pluck('sku', 'name')->all())->toBe(['Lamp' => 'L-1', 'Desk' => 'D-1']);
+});
+
+it('starts on the sheet the workbook opens on when no sheet matches better', function (): void {
+    livewire(ListProducts::class)
+        ->mountAction('import')
+        ->setActionData(['file' => Workbook::upload('two.xlsx', ['First' => [['Name'], ['A']], 'Second' => [['Name'], ['B']]])])
+        ->assertActionDataSet(['sheet' => 0, 'columnMap.name' => 'Name']);
 });
 
 it('lists only visible sheets', function (): void {
