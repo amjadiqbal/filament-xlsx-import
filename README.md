@@ -100,6 +100,10 @@ XlsxImportAction::make()
     // Keep core's CSV example file.
     ->exampleFormat('csv')
 
+    // Seconds the import request may run while it reads a workbook (default 300, only if PHP's limit is lower).
+    // null leaves max_execution_time alone.
+    ->timeLimit(600)
+
     // Core's own options work as usual.
     ->chunkSize(500)
     ->maxRows(50_000)
@@ -117,6 +121,10 @@ spreadsheet arrives exactly as typed, as it would from a CSV.
 - **Failed rows** are still downloaded as CSV, from core's own route.
 - **Queued imports** read the file once, in the request that starts the import, and queue the rows (as core does for
   CSV). Workers don't need access to the uploaded file.
+- **Large workbooks:** an `.xlsx` is a zipped XML file, so it reads slower than a CSV of the same size (roughly tens of
+  thousands of rows per second, depending on the server). The workbook is read once, with constant memory, and the
+  request's PHP time limit is raised to `timeLimit()` (300 seconds by default) while it runs. A web server timeout (for
+  example nginx's `fastcgi_read_timeout`) still applies.
 - **Remote disks:** if Livewire keeps temporary uploads on S3 or another remote disk, the workbook is copied to the
   local temp directory while it is read, because a workbook is a zip archive that has to be seekable. The copy is
   removed when the import starts.

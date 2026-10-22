@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AmjadIqbal\FilamentXlsxImport\Actions;
 
 use AmjadIqbal\FilamentXlsxImport\Reading\CellFormatter;
+use AmjadIqbal\FilamentXlsxImport\Reading\RecordBuffer;
 use AmjadIqbal\FilamentXlsxImport\Reading\Spreadsheet;
 use AmjadIqbal\FilamentXlsxImport\Reading\UnreadableSpreadsheet;
 use AmjadIqbal\FilamentXlsxImport\Rules\AcceptedExtension;
@@ -73,6 +74,8 @@ class XlsxImportAction extends ImportAction
     protected string|Closure $timeFormat = 'H:i:s';
 
     protected string|Closure $exampleFormat = 'xlsx';
+
+    protected int|Closure|null $timeLimit = 300;
 
     /** @var array<string, string> local copies of uploads on remote disks */
     protected array $localCopies = [];
@@ -166,9 +169,22 @@ class XlsxImportAction extends ImportAction
             /** @var TemporaryUploadedFile $file */
             $file = $data['file'];
 
+            $buffer = null;
+
             try {
                 $sheet = $action->normalizeSheet($data['sheet'] ?? null) ?? $action->getDefaultSheetFor($file);
-                $totalRows = $action->countRowsFor($file, $sheet);
+
+                if ($action->isSpreadsheet($file)) {
+                    $action->extendTimeLimit();
+
+                    // One pass over the workbook: rows are buffered while they are counted, then dispatched from the buffer.
+                    $buffer = RecordBuffer::fill($action->getRecordsFor($file, $sheet), stopAfter: $action->getMaxRows());
+                    $totalRows = $buffer->count();
+                    $records = $buffer->records();
+                } else {
+                    $totalRows = $action->countRowsFor($file, $sheet);
+                    $records = $action->getRecordsFor($file, $sheet);
+                }
             } catch (UnreadableSpreadsheet) {
                 $action->failureNotification(
                     Notification::make()
@@ -184,6 +200,8 @@ class XlsxImportAction extends ImportAction
             $maxRows = $action->getMaxRows() ?? $totalRows;
 
             if ($maxRows < $totalRows) {
+                $buffer?->delete();
+
                 $action->failureNotification(
                     Notification::make()
                         ->title(__('filament-actions::import.notifications.max_rows.title'))
@@ -209,7 +227,7 @@ class XlsxImportAction extends ImportAction
             $import->save();
 
             /** @var Generator<int, array<array<string, string>>> $importChunks */
-            $importChunks = (new ChunkIterator($action->getRecordsFor($file, $sheet), chunkSize: $action->getChunkSize()))->get();
+            $importChunks = (new ChunkIterator($records, chunkSize: $action->getChunkSize()))->get();
 
             $options = array_merge(
                 $action->getOptions(),
@@ -229,6 +247,7 @@ class XlsxImportAction extends ImportAction
                 Spreadsheet::forget($action->getLocalPath($file));
             }
 
+            $buffer?->delete();
             $action->forgetLocalCopies();
 
             if (
@@ -323,6 +342,32 @@ class XlsxImportAction extends ImportAction
         $this->exampleFormat = $format;
 
         return $this;
+    }
+
+    /**
+     * Seconds the import request may run while it reads a workbook (default 300), applied only when PHP's own limit
+     * is lower. Reading a large .xlsx takes far longer than reading a CSV of the same size. Null leaves PHP's limit alone.
+     */
+    public function timeLimit(int|Closure|null $seconds): static
+    {
+        $this->timeLimit = $seconds;
+
+        return $this;
+    }
+
+    public function getTimeLimit(): ?int
+    {
+        return $this->evaluate($this->timeLimit);
+    }
+
+    public function extendTimeLimit(): void
+    {
+        $seconds = $this->getTimeLimit();
+        $current = (int) ini_get('max_execution_time');
+
+        if (($seconds !== null) && ($current !== 0) && ($current < $seconds)) {
+            set_time_limit($seconds);
+        }
     }
 
     public function acceptsCsv(): bool

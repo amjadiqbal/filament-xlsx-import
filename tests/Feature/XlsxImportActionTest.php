@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use AmjadIqbal\FilamentXlsxImport\Actions\XlsxImportAction;
+use AmjadIqbal\FilamentXlsxImport\Reading\RecordBuffer;
 use AmjadIqbal\FilamentXlsxImport\Reading\Spreadsheet;
 use AmjadIqbal\FilamentXlsxImport\Tests\Fixtures\ListProducts;
 use AmjadIqbal\FilamentXlsxImport\Tests\Fixtures\Product;
@@ -274,6 +275,42 @@ it('enforces maxRows on the rows that are not empty', function (): void {
 
     expect(Product::query()->count())->toBe(0)
         ->and(Import::query()->count())->toBe(0);
+});
+
+it('reads the workbook once and stops reading once maxRows is exceeded', function (): void {
+    $buffer = RecordBuffer::fill((function () {
+        foreach (range(1, 100) as $i) {
+            yield ['n' => (string) $i];
+        }
+        throw new RuntimeException('read past the limit');
+    })(), stopAfter: 3);
+
+    expect($buffer->count())->toBe(4)
+        ->and(iterator_to_array($buffer->records(), false))->toBe([['n' => '1'], ['n' => '2'], ['n' => '3'], ['n' => '4']]);
+
+    $all = RecordBuffer::fill([['a' => 'é ✓ "quoted"'], ['a' => "two\nlines"]]);
+    expect(iterator_to_array($all->records(), false))->toBe([['a' => 'é ✓ "quoted"'], ['a' => "two\nlines"]]);
+});
+
+it('raises a lower PHP time limit while reading a workbook, and only then', function (): void {
+    $action = XlsxImportAction::make()->importer(ProductImporter::class);
+    $before = ini_get('max_execution_time');
+
+    try {
+        set_time_limit(30);
+        $action->extendTimeLimit();
+        expect(ini_get('max_execution_time'))->toBe('300');
+
+        set_time_limit(900);
+        $action->extendTimeLimit();
+        expect(ini_get('max_execution_time'))->toBe('900');
+
+        set_time_limit(30);
+        $action->timeLimit(null)->extendTimeLimit();
+        expect(ini_get('max_execution_time'))->toBe('30');
+    } finally {
+        set_time_limit((int) $before);
+    }
 });
 
 it('reports failed rows through core like a CSV import', function (): void {

@@ -15,3 +15,5 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Empty rows skipped, blank headings ignored, repeated headings numbered.
 - `.xlsx` example download (`exampleFormat('csv')` keeps core's file); `acceptCsv()` and `acceptOds()`.
 - A clear message for old `.xls` files.
+- The sheet picker starts on the sheet whose headings match the Importer best.
+- Workbooks are read once per import (rows buffered to a temp file); `timeLimit()` (default 300 s) for large files.
