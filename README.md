@@ -17,7 +17,12 @@ installs.
 [![PHP Version](https://img.shields.io/packagist/php-v/amjadiqbal/filament-xlsx-import?style=flat-square)](https://packagist.org/packages/amjadiqbal/filament-xlsx-import)
 [![License](https://img.shields.io/packagist/l/amjadiqbal/filament-xlsx-import.svg?style=flat-square)](LICENSE.md)
 
-![The import modal with an .xlsx file, the sheet picker and the column mapping](https://raw.githubusercontent.com/amjadiqbal/filament-xlsx-import/main/art/screenshots/modal-light.png)
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/amjadiqbal/filament-xlsx-import/main/art/screenshots/modal-dark.png">
+    <img alt="The import modal with an .xlsx file, the sheet picker and the guessed column mapping" src="https://raw.githubusercontent.com/amjadiqbal/filament-xlsx-import/main/art/screenshots/modal-light.png" width="70%">
+  </picture>
+</p>
 
 ## What it does
 
