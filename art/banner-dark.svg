@@ -1,0 +1,62 @@
+<svg width="1200" height="300" viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B1220"/>
+      <stop offset="100%" stop-color="#0B2A22"/>
+    </linearGradient>
+    <linearGradient id="iconbg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#064E3B"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="300" fill="url(#bg)"/>
+  <g transform="translate(60,75) scale(0.29297)">
+    <rect width="512" height="512" rx="112" fill="url(#iconbg)"/>
+    <!-- sheet -->
+    <rect x="92" y="96" width="268" height="300" rx="26" fill="#F8FAFC"/>
+    <path d="M92 122 Q92 96 118 96 H334 Q360 96 360 122 V158 H92 Z" fill="#10B981"/>
+    <line x1="182" y1="96" x2="182" y2="396" stroke="#CBD5E1" stroke-width="6"/>
+    <line x1="272" y1="96" x2="272" y2="396" stroke="#CBD5E1" stroke-width="6"/>
+    <line x1="92" y1="218" x2="360" y2="218" stroke="#CBD5E1" stroke-width="6"/>
+    <line x1="92" y1="278" x2="360" y2="278" stroke="#CBD5E1" stroke-width="6"/>
+    <line x1="92" y1="338" x2="360" y2="338" stroke="#CBD5E1" stroke-width="6"/>
+    <rect x="110" y="178" width="54" height="20" rx="10" fill="#94A3B8"/>
+    <rect x="200" y="178" width="54" height="20" rx="10" fill="#94A3B8"/>
+    <rect x="110" y="238" width="54" height="20" rx="10" fill="#94A3B8"/>
+    <rect x="200" y="238" width="40" height="20" rx="10" fill="#94A3B8"/>
+    <!-- X mark on the header -->
+    <g stroke="#FFFFFF" stroke-width="12" stroke-linecap="round"><line x1="122" y1="112" x2="152" y2="142"/><line x1="152" y1="112" x2="122" y2="142"/></g>
+    <!-- import badge: arrow into a tray -->
+    <circle cx="372" cy="372" r="86" fill="#059669" stroke="#0F172A" stroke-width="14"/>
+    <g fill="none" stroke="#FFFFFF" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M372 320 V392"/><path d="M342 364 L372 394 L402 364"/><path d="M330 412 H414"/>
+    </g>
+</g>
+  <text x="235" y="148" font-family="Helvetica, Arial, sans-serif" font-size="64" font-weight="700" fill="#F8FAFC">XLSX Import</text>
+  <text x="238" y="190" font-family="Helvetica, Arial, sans-serif" font-size="23" font-weight="500" fill="#6EE7B7" letter-spacing="0.3">Excel files in Filament's own ImportAction</text>
+  <g font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="600" fill="#CBD5E1" text-anchor="middle">
+<g transform="translate(238,218)"><rect width="194" height="32" rx="16.0" fill="#111C33" stroke="#273449"/><text x="97.0" y="21.12">.xlsx · .ods · .csv</text></g>
+<g transform="translate(442,218)"><rect width="244" height="32" rx="16.0" fill="#111C33" stroke="#273449"/><text x="122.0" y="21.12">your Importers, unchanged</text></g>
+<g transform="translate(696,218)"><rect width="152" height="32" rx="16.0" fill="#111C33" stroke="#273449"/><text x="76.0" y="21.12">Filament 4 · 5</text></g>
+  </g>
+  <g transform="translate(905,30) scale(0.82)" font-family="Helvetica, Arial, sans-serif">
+    <rect width="300" height="212" rx="16" fill="#111C33" stroke="#273449" stroke-width="1.5"/>
+    <rect x="16" y="16" width="268" height="38" rx="10" fill="#0F2E26"/>
+    <text x="30" y="40" font-size="13" font-weight="700" fill="#6EE7B7">customers.xlsx</text>
+    <text x="270" y="40" font-size="12" font-weight="600" fill="#94A3B8" text-anchor="end">Sheet: 2024 ▾</text>
+    <text x="18" y="80" font-size="11" font-weight="700" fill="#94A3B8" letter-spacing="0.6">COLUMNS</text>
+    <line x1="0" y1="90" x2="300" y2="90" stroke="#273449"/>
+    <text x="18" y="115" font-size="13" font-weight="700" fill="#F8FAFC">name</text>
+    <text x="150" y="115" font-size="13" fill="#94A3B8">← Name</text>
+    <g transform="translate(262 100) scale(0.85)" fill="none" stroke="#34D399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></g>
+    <line x1="0" y1="130" x2="300" y2="130" stroke="#273449"/>
+    <text x="18" y="155" font-size="13" font-weight="700" fill="#F8FAFC">email</text>
+    <text x="150" y="155" font-size="13" fill="#94A3B8">← Email</text>
+    <g transform="translate(262 140) scale(0.85)" fill="none" stroke="#34D399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></g>
+    <line x1="0" y1="170" x2="300" y2="170" stroke="#273449"/>
+    <text x="18" y="195" font-size="13" font-weight="700" fill="#F8FAFC">created_at</text>
+    <text x="150" y="195" font-size="13" fill="#94A3B8">← Joined</text>
+    <g transform="translate(262 180) scale(0.85)" fill="none" stroke="#34D399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></g>
+  </g>
+  <text x="1170" y="284" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#64748B">amjadiqbal/filament-xlsx-import</text>
+</svg>

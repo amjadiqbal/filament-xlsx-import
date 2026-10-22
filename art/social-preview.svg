@@ -1,0 +1,43 @@
+<svg width="1280" height="640" viewBox="0 0 1280 640" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B1220"/>
+      <stop offset="100%" stop-color="#0B2A22"/>
+    </linearGradient>
+    <linearGradient id="iconbg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#064E3B"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="640" fill="url(#bg)"/>
+  <g transform="translate(490,50) scale(0.5859)">
+    <rect width="512" height="512" rx="112" fill="url(#iconbg)"/>
+    <!-- sheet -->
+    <rect x="92" y="96" width="268" height="300" rx="26" fill="#F8FAFC"/>
+    <path d="M92 122 Q92 96 118 96 H334 Q360 96 360 122 V158 H92 Z" fill="#10B981"/>
+    <line x1="182" y1="96" x2="182" y2="396" stroke="#CBD5E1" stroke-width="6"/>
+    <line x1="272" y1="96" x2="272" y2="396" stroke="#CBD5E1" stroke-width="6"/>
+    <line x1="92" y1="218" x2="360" y2="218" stroke="#CBD5E1" stroke-width="6"/>
+    <line x1="92" y1="278" x2="360" y2="278" stroke="#CBD5E1" stroke-width="6"/>
+    <line x1="92" y1="338" x2="360" y2="338" stroke="#CBD5E1" stroke-width="6"/>
+    <rect x="110" y="178" width="54" height="20" rx="10" fill="#94A3B8"/>
+    <rect x="200" y="178" width="54" height="20" rx="10" fill="#94A3B8"/>
+    <rect x="110" y="238" width="54" height="20" rx="10" fill="#94A3B8"/>
+    <rect x="200" y="238" width="40" height="20" rx="10" fill="#94A3B8"/>
+    <!-- X mark on the header -->
+    <g stroke="#FFFFFF" stroke-width="12" stroke-linecap="round"><line x1="122" y1="112" x2="152" y2="142"/><line x1="152" y1="112" x2="122" y2="142"/></g>
+    <!-- import badge: arrow into a tray -->
+    <circle cx="372" cy="372" r="86" fill="#059669" stroke="#0F172A" stroke-width="14"/>
+    <g fill="none" stroke="#FFFFFF" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M372 320 V392"/><path d="M342 364 L372 394 L402 364"/><path d="M330 412 H414"/>
+    </g>
+</g>
+  <text x="640" y="430" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="76" font-weight="700" fill="#F8FAFC">XLSX Import</text>
+  <text x="640" y="482" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="28" font-weight="500" fill="#6EE7B7">Import .xlsx and .ods with Filament's core ImportAction</text>
+  <g font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="600" fill="#CBD5E1" text-anchor="middle">
+<g transform="translate(282,530)"><rect width="226" height="40" rx="20.0" fill="#111C33" stroke="#273449"/><text x="113.0" y="26.40">.xlsx · .ods · .csv</text></g>
+<g transform="translate(522,530)"><rect width="286" height="40" rx="20.0" fill="#111C33" stroke="#273449"/><text x="143.0" y="26.40">your Importers, unchanged</text></g>
+<g transform="translate(822,530)"><rect width="175" height="40" rx="20.0" fill="#111C33" stroke="#273449"/><text x="87.5" y="26.40">Filament 4 · 5</text></g>
+  </g>
+  <text x="1240" y="610" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="18" fill="#64748B">amjadiqbal/filament-xlsx-import</text>
+</svg>

@@ -1,0 +1,77 @@
+{
+    "name": "amjadiqbal/filament-xlsx-import",
+    "description": "Excel (.xlsx) and OpenDocument (.ods) files in Filament's core ImportAction, with your existing Importer classes. Filament 4 and 5.",
+    "keywords": [
+        "filament",
+        "filament-plugin",
+        "filamentphp",
+        "laravel",
+        "import",
+        "xlsx",
+        "excel",
+        "ods",
+        "spreadsheet",
+        "openspout"
+    ],
+    "homepage": "https://github.com/amjadiqbal/filament-xlsx-import",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Amjad Iqbal",
+            "homepage": "https://amjad.com.pk",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/amjadiqbal/filament-xlsx-import/issues",
+        "source": "https://github.com/amjadiqbal/filament-xlsx-import"
+    },
+    "require": {
+        "php": "^8.2",
+        "filament/actions": "^4.0|^5.0",
+        "illuminate/contracts": "^12.0|^13.0",
+        "openspout/openspout": "^4.23",
+        "spatie/laravel-package-tools": "^1.16"
+    },
+    "require-dev": {
+        "filament/filament": "^4.0|^5.0",
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.18",
+        "orchestra/testbench": "^10.0|^11.0",
+        "pestphp/pest": "^3.0|^4.0",
+        "pestphp/pest-plugin-laravel": "^3.0|^4.0",
+        "pestphp/pest-plugin-livewire": "^3.0|^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "AmjadIqbal\\FilamentXlsxImport\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AmjadIqbal\\FilamentXlsxImport\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/pest",
+        "lint": "vendor/bin/pint --test",
+        "format": "vendor/bin/pint",
+        "analyse": "vendor/bin/phpstan analyse --memory-limit=1G"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "AmjadIqbal\\FilamentXlsxImport\\FilamentXlsxImportServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
