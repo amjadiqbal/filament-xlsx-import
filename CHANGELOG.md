@@ -6,6 +6,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-10-23
+
+First release.
+
 ### Added
 
 - `XlsxImportAction`: Filament's `ImportAction` reading `.xlsx`, `.ods` and `.csv`, for Filament 4 and 5.
@@ -17,3 +21,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - A clear message for old `.xls` files.
 - The sheet picker starts on the sheet whose headings match the Importer best.
 - Workbooks are read once per import (rows buffered to a temp file); `timeLimit()` (default 300 s) for large files.
+
+[Unreleased]: https://github.com/amjadiqbal/filament-xlsx-import/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/amjadiqbal/filament-xlsx-import/releases/tag/v1.0.0
