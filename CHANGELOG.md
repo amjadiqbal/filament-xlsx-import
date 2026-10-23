@@ -6,6 +6,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Changed
+
+- The missing-sheet message says the sheet must be visible and how `sheet()` matches (by name, or by position from 0).
+
+### Added
+
+- Tests: an `.xls` upload with `acceptCsv(false)` shows the "save as .xlsx" message; `sheet()` naming a hidden sheet.
+
 ## [1.0.1] - 2026-10-23
 
 ### Fixed

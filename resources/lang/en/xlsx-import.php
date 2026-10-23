@@ -11,7 +11,7 @@ return [
 
     'sheet' => [
         'label' => 'Sheet',
-        'missing' => 'The workbook has no sheet called ":sheet".',
+        'missing' => 'The workbook has no visible sheet ":sheet". Sheets are matched by name, or by position counted from 0; hidden sheets are skipped.',
     ],
 
     'example' => [

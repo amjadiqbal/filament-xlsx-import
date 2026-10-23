@@ -167,7 +167,7 @@ it('rejects a workbook without the configured sheet', function (): void {
         ->setActionData(['file' => Workbook::upload('catalog.xlsx', ['Other' => [['Name'], ['Lamp']]])])
         ->assertHasActionErrors(['file']);
 
-    expect($component->errors()->first('mountedActions.0.data.file'))->toBe('The workbook has no sheet called "Stock".')
+    expect($component->errors()->first('mountedActions.0.data.file'))->toBe(__('filament-xlsx-import::xlsx-import.sheet.missing', ['sheet' => 'Stock']))
         ->and(Product::query()->count())->toBe(0);
 });
 
@@ -262,6 +262,28 @@ it('keeps .xls selectable in the browser without CSV, so the .xls message can sh
     expect($types)->toContain('application/vnd.ms-excel')
         ->and($types)->not->toContain('text/csv')
         ->and($types)->not->toContain('text/plain');
+});
+
+it('shows the .xls message for an .xls upload when CSV is turned off', function (): void {
+    ListProducts::$configureAction = fn (XlsxImportAction $action) => $action->acceptCsv(false);
+
+    $component = livewire(ListProducts::class)
+        ->mountAction('import')
+        ->setActionData(['file' => UploadedFile::fake()->createWithContent('legacy.xls', (string) file_get_contents(__DIR__.'/../files/legacy.xls'))])
+        ->assertHasActionErrors(['file']);
+
+    expect($component->errors()->first('mountedActions.0.data.file'))->toBe(__('filament-xlsx-import::xlsx-import.file.xls'));
+});
+
+it('says a hidden sheet is not available when sheet() names it', function (): void {
+    ListProducts::$configureAction = fn (XlsxImportAction $action) => $action->sheet('Secret');
+
+    $component = livewire(ListProducts::class)
+        ->mountAction('import')
+        ->setActionData(['file' => Workbook::upload('catalog.xlsx', ['Data' => [['Name'], ['Lamp']], 'Secret' => [['Name'], ['X']]], hidden: ['Secret'])])
+        ->assertHasActionErrors(['file']);
+
+    expect($component->errors()->first('mountedActions.0.data.file'))->toContain('no visible sheet "Secret"')->toContain('hidden sheets are skipped');
 });
 
 it('can stop accepting .csv files', function (): void {

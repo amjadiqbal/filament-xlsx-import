@@ -338,7 +338,7 @@ class XlsxImportAction extends ImportAction
     }
 
     /**
-     * The format of the "Download example" file: 'xlsx' (default) or 'csv' (core's file).
+     * The format of the "Download example" file: 'xlsx' (default) or 'csv' (a CSV file built like core's).
      */
     public function exampleFormat(string|Closure $format): static
     {
