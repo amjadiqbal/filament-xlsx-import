@@ -6,6 +6,7 @@ namespace AmjadIqbal\FilamentXlsxImport\Actions;
 
 use AmjadIqbal\FilamentXlsxImport\Reading\CellFormatter;
 use AmjadIqbal\FilamentXlsxImport\Reading\RecordBuffer;
+use AmjadIqbal\FilamentXlsxImport\Reading\SheetNotFound;
 use AmjadIqbal\FilamentXlsxImport\Reading\Spreadsheet;
 use AmjadIqbal\FilamentXlsxImport\Reading\UnreadableSpreadsheet;
 use AmjadIqbal\FilamentXlsxImport\Rules\AcceptedExtension;
@@ -57,7 +58,7 @@ class XlsxImportAction extends ImportAction
      * Old binary .xls workbooks, let past the mime check only so the extension rule can say how to convert them
      * instead of failing with a list of mime types.
      */
-    public const XLS_MIME_TYPES = ['application/CDFV2', 'application/x-ole-storage', 'application/vnd.ms-office'];
+    public const XLS_MIME_TYPES = ['application/vnd.ms-excel', 'application/CDFV2', 'application/x-ole-storage', 'application/vnd.ms-office'];
 
     protected bool|Closure $acceptsCsv = true;
 
@@ -106,11 +107,13 @@ class XlsxImportAction extends ImportAction
                     try {
                         $sheet = $action->getDefaultSheetFor($state);
                         $headings = $action->getHeadingsFor($state, $sheet);
-                    } catch (UnreadableSpreadsheet) {
+                    } catch (UnreadableSpreadsheet $exception) {
                         $component->state([]);
 
                         throw ValidationException::withMessages([
-                            $component->getStatePath() => __('filament-xlsx-import::xlsx-import.file.unreadable'),
+                            $component->getStatePath() => ($exception instanceof SheetNotFound)
+                                ? $exception->getMessage()
+                                : __('filament-xlsx-import::xlsx-import.file.unreadable'),
                         ]);
                     }
 
@@ -530,10 +533,12 @@ class XlsxImportAction extends ImportAction
         $spreadsheet = $this->makeSpreadsheet($file);
         $sheet = $spreadsheet->resolveSheet($this->getSheet());
 
+        if (($sheet === null) && ($this->getSheet() !== null)) {
+            throw new SheetNotFound(__('filament-xlsx-import::xlsx-import.sheet.missing', ['sheet' => $this->getSheet()]));
+        }
+
         if ($sheet === null) {
-            throw new UnreadableSpreadsheet(($this->getSheet() !== null)
-                ? __('filament-xlsx-import::xlsx-import.sheet.missing', ['sheet' => $this->getSheet()])
-                : 'The workbook has no visible sheet.');
+            throw new UnreadableSpreadsheet('The workbook has no visible sheet.');
         }
 
         if ($this->getSheet() !== null) {

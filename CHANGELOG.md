@@ -6,6 +6,20 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-10-23
+
+### Fixed
+
+- With `sheet('X')`, a workbook that has no sheet X now says so ("The workbook has no sheet called \"X\"") instead of
+  the generic "could not be read as a spreadsheet".
+- With `acceptCsv(false)`, the browser no longer turns away `.xls` files, so the message on how to save them as `.xlsx`
+  shows.
+
+### Changed
+
+- README: says plainly how memory and reading work for large files (request memory grows with the row count, as for
+  CSV), that `headerOffset()` counts empty rows, and that the CSV example is the plugin's own, matching core's.
+
 ## [1.0.0] - 2026-10-23
 
 First release.
@@ -22,5 +36,6 @@ First release.
 - The sheet picker starts on the sheet whose headings match the Importer best.
 - Workbooks are read once per import (rows buffered to a temp file); `timeLimit()` (default 300 s) for large files.
 
-[Unreleased]: https://github.com/amjadiqbal/filament-xlsx-import/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/amjadiqbal/filament-xlsx-import/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/amjadiqbal/filament-xlsx-import/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/amjadiqbal/filament-xlsx-import/releases/tag/v1.0.0

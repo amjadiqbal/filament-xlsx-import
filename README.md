@@ -37,10 +37,10 @@ installs.
     (`1234567890123`), and decimals to Excel's own 15 digits (`0.3`, not `0.30000000000000004`);
   - TRUE/FALSE as `1`/`0`; formulas as their last calculated value; error cells (`#N/A`) as empty.
 - Skips empty rows, ignores columns with no heading, and numbers repeated headings (`Name`, `Name (2)`).
-- Streams the workbook row by row, so large files don't load into memory. Rows are chunked and dispatched by core's
-  `ImportDispatcher`, so queued imports, `chunkSize()`, `maxRows()` and job batches behave as with CSV.
-- "Download example" gives an `.xlsx` file built from your Importer's columns and examples (or core's CSV, if you
-  prefer).
+- Reads the workbook as a stream, row by row, instead of loading the whole file. Rows are chunked and dispatched by
+  core's `ImportDispatcher`, so queued imports, `chunkSize()`, `maxRows()` and job batches behave as with CSV.
+- "Download example" gives an `.xlsx` file built from your Importer's columns and examples (or a CSV file like core's,
+  if you prefer).
 - Turns away old binary `.xls` files with a message that says how to save them as `.xlsx`.
 
 ## Requirements
@@ -90,7 +90,8 @@ XlsxImportAction::make()
     // Or never show the picker: the best-matching sheet is read.
     ->sheetPicker(false)
 
-    // The row that holds the headings, counted from 0 the way the spreadsheet numbers rows (core's own option).
+    // The row that holds the headings, counted from 0 over every row of the sheet, empty ones included
+    // (core's own option): headerOffset(2) reads the headings from spreadsheet row 3.
     ->headerOffset(2)
 
     // How date, date-time and time cells reach your Importer.
@@ -102,7 +103,7 @@ XlsxImportAction::make()
     ->acceptCsv(false)
     ->acceptOds(false)
 
-    // Keep core's CSV example file.
+    // Offer a CSV example file, like core's, instead of .xlsx.
     ->exampleFormat('csv')
 
     // Seconds the import request may run while it reads a workbook (default 300, only if PHP's limit is lower).
@@ -126,10 +127,13 @@ spreadsheet arrives exactly as typed, as it would from a CSV.
 - **Failed rows** are still downloaded as CSV, from core's own route.
 - **Queued imports** read the file once, in the request that starts the import, and queue the rows (as core does for
   CSV). Workers don't need access to the uploaded file.
-- **Large workbooks:** an `.xlsx` is a zipped XML file, so it reads slower than a CSV of the same size (roughly tens of
-  thousands of rows per second, depending on the server). The workbook is read once, with constant memory, and the
-  request's PHP time limit is raised to `timeLimit()` (300 seconds by default) while it runs. A web server timeout (for
-  example nginx's `fastcgi_read_timeout`) still applies.
+- **Large workbooks:** an `.xlsx` is a zipped XML file, so it reads much slower than a CSV of the same size. On a heavily
+  loaded test machine, a 100,000-row workbook took 37 to 59 seconds to start importing. When the import starts, the data
+  rows are read once, as a stream, into a temporary file, and the request's PHP time limit is raised to `timeLimit()`
+  (300 seconds by default). Core's `ImportDispatcher` then builds every chunk's job in that request, as it does for CSV,
+  so the request's memory still grows with the row count. A web server timeout (for example nginx's
+  `fastcgi_read_timeout`) still applies.
+- **While you map columns**, each change re-reads the sheet list and the header rows (not the data rows).
 - **Remote disks:** if Livewire keeps temporary uploads on S3 or another remote disk, the workbook is copied to the
   local temp directory while it is read, because a workbook is a zip archive that has to be seekable. The copy is
   removed when the import starts.

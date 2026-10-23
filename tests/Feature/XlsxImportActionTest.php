@@ -162,12 +162,13 @@ it('always reads a configured sheet and hides the picker', function (): void {
 it('rejects a workbook without the configured sheet', function (): void {
     ListProducts::$configureAction = fn (XlsxImportAction $action) => $action->sheet('Stock');
 
-    livewire(ListProducts::class)
+    $component = livewire(ListProducts::class)
         ->mountAction('import')
         ->setActionData(['file' => Workbook::upload('catalog.xlsx', ['Other' => [['Name'], ['Lamp']]])])
         ->assertHasActionErrors(['file']);
 
-    expect(Product::query()->count())->toBe(0);
+    expect($component->errors()->first('mountedActions.0.data.file'))->toBe('The workbook has no sheet called "Stock".')
+        ->and(Product::query()->count())->toBe(0);
 });
 
 it('skips empty rows, drops blank headings and numbers repeated ones', function (string $format): void {
@@ -253,6 +254,14 @@ it('refuses a broken .xlsx file', function (): void {
         ->assertHasActionErrors(['file']);
 
     expect(Import::query()->count())->toBe(0);
+});
+
+it('keeps .xls selectable in the browser without CSV, so the .xls message can show', function (): void {
+    $types = XlsxImportAction::make()->importer(ProductImporter::class)->acceptCsv(false)->getAcceptedMimeTypes();
+
+    expect($types)->toContain('application/vnd.ms-excel')
+        ->and($types)->not->toContain('text/csv')
+        ->and($types)->not->toContain('text/plain');
 });
 
 it('can stop accepting .csv files', function (): void {
